@@ -26,3 +26,7 @@ jobs:
         shell: bash
         run: |
           echo "Branch Type: ${BRANCH_TYPE}, version: ${VERSION}"
+          git fetch -a
+          git branch -r | while read -r branch; do
+            echo "Branch: ${branch}"
+          done
