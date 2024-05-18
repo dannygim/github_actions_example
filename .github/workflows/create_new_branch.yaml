@@ -34,7 +34,7 @@ jobs:
           git fetch -a
           EXIST_BRANCH=$(git branch -r)
           echo "EXIST_BRANCH1: ${EXIST_BRANCH}"
-          EXIST_BRANCH=$(git branch -r | grep "origin/${NEW_BRANCH}")
+          EXIST_BRANCH=$(git branch -r --list "origin/${NEW_BRANCH}")
           echo "EXIST_BRANCH: ${EXIST_BRANCH}"
           if [ -n "$EXIST_BRANCH" ]; then
             echo "$NEW_BRANCH branch already exists"
