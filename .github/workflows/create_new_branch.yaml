@@ -30,8 +30,10 @@ jobs:
         run: |
           echo "Branch Type: ${BRANCH_TYPE}, version: ${VERSION}"
           NEW_BRANCH="${BRANCH_TYPE}/${VERSION}"
+          echo "New Branch: ${NEW_BRANCH}"
           git fetch -a
           EXIST_BRANCH=$(git branch -r | grep "origin/${NEW_BRANCH}")
+          echo "EXIST_BRANCH: ${EXIST_BRANCH}"
           if [ -n "$EXIST_BRANCH" ]; then
             echo "$NEW_BRANCH branch already exists"
             exit 0
