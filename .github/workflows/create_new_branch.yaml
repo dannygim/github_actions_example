@@ -18,6 +18,7 @@ on:
 jobs:
   print_inputs:
     runs-on: ubuntu-latest
+    if: ${{ inputs.branch_type }}
     steps:
       - name: Print the input values
         run: echo "Branch Type: ${{inputs.branch_type}}, version: ${{inputs.version}}"
