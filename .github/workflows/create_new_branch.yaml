@@ -20,4 +20,4 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Print the input values
-        run: echo Branch Type: ${{inputs.branch_type}}, version: ${{inputs.version}}
+        run: echo Branch Type: ${{ inputs.branch_type }}, version: ${{ inputs.version }}
