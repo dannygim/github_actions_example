@@ -21,7 +21,7 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-        
+
       - name: Print the input values
         env:
           BRANCH_TYPE: ${{ inputs.branch_type }}
@@ -30,6 +30,12 @@ jobs:
         run: |
           echo "Branch Type: ${BRANCH_TYPE}, version: ${VERSION}"
           git fetch -a
+          git branch -r | while read -r branch; do
+            echo "Branch: ${branch}"
+          done
+          git switch -C $BRANCH_TYPE/$VERSION origin/main
+          git push origin $BRANCH_TYPE/$VERSION
+
           git branch -r | while read -r branch; do
             echo "Branch: ${branch}"
           done
