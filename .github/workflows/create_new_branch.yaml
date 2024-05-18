@@ -29,12 +29,15 @@ jobs:
         shell: bash
         run: |
           echo "Branch Type: ${BRANCH_TYPE}, version: ${VERSION}"
+          NEW_BRANCH="${BRANCH_TYPE}/${VERSION}"
           git fetch -a
-          git branch -r | while read -r branch; do
-            echo "Branch: ${branch}"
-          done
-          git switch -C $BRANCH_TYPE/$VERSION origin/main
-          git push origin $BRANCH_TYPE/$VERSION
+          EXIST_BRANCH=$(git branch -r | grep "origin/${NEW_BRANCH}")
+          if [ -n "$EXIST_BRANCH" ]; then
+            echo "$NEW_BRANCH branch already exists"
+            exit 0
+          fi
+          git switch -C $NEW_BRANCH origin/main
+          git push origin $NEW_BRANCH
 
           git branch -r | while read -r branch; do
             echo "Branch: ${branch}"
