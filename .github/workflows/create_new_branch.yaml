@@ -19,6 +19,9 @@ jobs:
   print_inputs:
     runs-on: ubuntu-latest
     steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        
       - name: Print the input values
         env:
           BRANCH_TYPE: ${{ inputs.branch_type }}
