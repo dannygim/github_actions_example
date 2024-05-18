@@ -23,5 +23,6 @@ jobs:
         env:
           BRANCH_TYPE: ${{ inputs.branch_type }}
           VERSION: ${{ inputs.version }}
+        shell: bash
         run: |
           echo "Branch Type: ${BRANCH_TYPE}, version: ${VERSION}"
