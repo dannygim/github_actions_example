@@ -1,0 +1,23 @@
+name: Create a branch
+on:
+  workflow_dispatch:
+    inputs:
+      branch_type:
+        description: 'Branch Type'
+        required: true
+        default: 'release'
+        type: choice
+        options:
+          - release
+          - hotfix
+      version:
+        description: 'Version'
+        required: true
+        type: string
+
+jobs:
+  print_inputs:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Print the input values
+        run: echo "Branch Type: ${{inputs.branch_type}}, version: ${{inputs.version}}"
