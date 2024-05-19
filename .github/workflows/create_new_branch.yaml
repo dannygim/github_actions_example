@@ -32,8 +32,8 @@ jobs:
         shell: bash
         run: |
           pattern="^v[0-9]+\.[0-9]+\.[0-9]+$"
-          git tag --list | grep -E "^v[0-9]+\.[0-9]+\.[0-9]+$"
-          existing_tags=$(git tag --list | grep -E "^v[0-9]+\.[0-9]+\.[0-9]+$")
+          git tag --list | grep -E '^v[0-9]+\.[0-9]+\.[0-9]+$'
+          existing_tags=$(git tag --list | grep -E '^v[0-9]+\.[0-9]+\.[0-9]+$')
           echo "Existing: ${existing_tags}"
           if [ -n "$existing_tags" ]; then
             echo "NG"
