@@ -26,6 +26,21 @@ jobs:
         with:
           fetch-depth: 0
       
+      - name: Verify the version
+        env:
+          VERSION: "${{ inputs.version }}"
+        shell: bash
+        run: |
+          pattern="^v[0-9]+\.[0-9]+\.[0-9]+$"
+          existing_tags=$(git tag --list | grep -E "$pattern")
+          echo "Existing: ${existing_tags}"
+          if [ -n "$existing_tags" ]; then
+            echo "NG"
+            exit 1
+          fi
+          echo "NNNNNNN"
+          exit 1
+      
       - name: Create the new branch
         env:
           BRANCH_NAME: "${{ inputs.branch_type }}/${{ inputs.version }}"
@@ -43,16 +58,22 @@ jobs:
           git switch -C $BRANCH_NAME $BRANCH_BASE
           git push origin $BRANCH_NAME
           echo "$BRANCH_NAME branch has been created."
-          git branch
 
       - name: Create the new tag
         env:
-          BRANCH_NAME: "${{ inputs.branch_type }}/${{ inputs.version }}"
+          VERSION: "${{ inputs.version }}"
+        shell: bash
+        run: |
+          echo "New version: ${VERSION}"
+
+          git tag $VERSION
+          git push origin $VERSION
+
+      - name: Create the new rc tag
+        env:
           VERSION_BASE: "${{ inputs.version }}-rc"
         shell: bash
         run: |
-          git switch ${BRANCH_NAME}
-          git branch
           echo "VERSION_BASE: ${VERSION_BASE}"
           tag_pattern="${VERSION_BASE}.*"
           echo "tag_pattern: ${tag_pattern}"
