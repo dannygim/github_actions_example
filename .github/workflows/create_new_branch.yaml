@@ -35,7 +35,7 @@ jobs:
           echo "Pattern: ${pattern}"
           grep --help
           echo "==== 1 ======"
-          git tag | grep -E "^v[0-9]+\.[0-9]+\.[0-9]+$"
+          git tag | grep -rE "v[0-9]+\.[0-9]+\.[0-9]+"
           echo "==== 2 ======"
           git tag --list | grep -E "^v[0-9]+\.[0-9]+\.[0-9]+$"
           echo "==== 3 ======"
