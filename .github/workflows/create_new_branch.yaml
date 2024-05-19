@@ -33,7 +33,8 @@ jobs:
         run: |
           pattern="^v[0-9]+\.[0-9]+\.[0-9]+$"
           echo "Pattern: ${pattern}"
-          git tag --list | grep -ioE '^v[[:digit]]+\.[[:digit]]+\.[[:digit]]+$'
+          grep --help
+          git tag --list | grep -ioE "^v[[:digit]]+\.[[:digit]]+\.[[:digit]]+$"
           existing_tags=$(git tag --list | grep -ioE '^v[[:digit]]+\.[[:digit]]+\.[[:digit]]+$')
           echo "Existing: ${existing_tags}"
           if [ -n "$existing_tags" ]; then
