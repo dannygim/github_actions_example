@@ -91,26 +91,3 @@ jobs:
 
           git tag $next_tag
           git push origin $next_tag
-
-      # - name: Create release branch and tag
-      #   env:
-      #     BRANCH_TYPE: ${{ inputs.branch_type }}
-      #     VERSION: ${{ inputs.version }}
-      #     NEW_BRANCH: "${{ inputs.branch_type }}/${{ inputs.version }}"
-      #     VERSION_TAG: "${{ inputs.version }}-rc.1"
-      #   shell: bash
-      #   run: |
-      #     echo "New Branch: ${NEW_BRANCH}"
-      #     git fetch -a
-      #     EXIST_BRANCH=$(git branch -r --list "origin/${NEW_BRANCH}")
-      #     echo "EXIST_BRANCH: ${EXIST_BRANCH}"
-      #     if [ -n "$EXIST_BRANCH" ]; then
-      #       echo "$NEW_BRANCH branch already exists"
-      #       exit 0
-      #     fi
-      #     git switch -C $NEW_BRANCH origin/main
-      #     git push origin $NEW_BRANCH
-
-      #     git branch -r | while read -r branch; do
-      #       echo "Branch: ${branch}"
-      #     done

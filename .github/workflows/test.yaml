@@ -1,0 +1,36 @@
+name: Github Actions Test
+on:
+  workflow_dispatch:
+    inputs:
+      branch_type:
+        description: 'Branch Type'
+        required: true
+        default: 'release'
+        type: choice
+        options:
+          - release
+          - hotfix
+      version:
+        description: 'Version(e.g. v0.1.0)'
+        required: true
+        type: string
+
+jobs:
+  create_release_branch_job:
+    name: Create release branch and tag
+    if: ${{ inputs.branch_type }} == 'release'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      
+      - name: Verify the version
+        env:
+          VERSION: "${{ inputs.version }}"
+          PATTERN: "^\\s*origin/(develop|release/v[0-9]+\\.[0-9]+\\.[0-9]+$)"
+        shell: bash
+        run: |
+          scripts/test.sh
+      
