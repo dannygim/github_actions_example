@@ -53,8 +53,11 @@ jobs:
           VERSION_BASE: "${{ inputs.version }}-rc"
         shell: bash
         run: |
+          echo "VERSION_BASE: ${VERSION_BASE}"
           tag_pattern="^${VERSION_BASE}\.[0-9]+$"
+          echo "tag_pattern: ${tag_pattern}"
           existing_tags=$(git tag | grep -E "$tag_pattern")
+          echo "existing_tags: ${existing_tags}"
 
           echo "find Max RC number..."
           max_rc_number=0
