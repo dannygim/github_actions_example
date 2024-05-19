@@ -43,13 +43,15 @@ jobs:
           git switch -C $BRANCH_NAME $BRANCH_BASE
           git push origin $BRANCH_NAME
           echo "$BRANCH_NAME branch has been created."
+          git branch
 
       - name: Create the new tag
         env:
-          BRANCH_TYPE: ${{ inputs.branch_type }}
+          BRANCH_NAME: "${{ inputs.branch_type }}/${{ inputs.version }}"
           VERSION_BASE: "${{ inputs.version }}-rc"
         shell: bash
         run: |
+          git switch ${BRANCH_NAME}
           git branch
           echo "VERSION_BASE: ${VERSION_BASE}"
           tag_pattern="${VERSION_BASE}.*"
