@@ -50,6 +50,7 @@ jobs:
           VERSION_BASE: "${{ inputs.version }}-rc"
         shell: bash
         run: |
+          git branch
           echo "VERSION_BASE: ${VERSION_BASE}"
           tag_pattern="${VERSION_BASE}.*"
           echo "tag_pattern: ${tag_pattern}"
