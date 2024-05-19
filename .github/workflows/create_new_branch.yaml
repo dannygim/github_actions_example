@@ -16,33 +16,82 @@ on:
         type: string
 
 jobs:
-  print_inputs:
+  create_release_branch_job:
+    name: Create release branch and tag
+    if: ${{ inputs.branch_type }} == 'release'
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-
-      - name: Print the input values
-        env:
-          BRANCH_TYPE: ${{ inputs.branch_type }}
-          VERSION: ${{ inputs.version }}
+      
+      - name: Fetch all
         shell: bash
         run: |
-          echo "Branch Type: ${BRANCH_TYPE}, version: ${VERSION}"
-          NEW_BRANCH="${BRANCH_TYPE}/${VERSION}"
-          echo "New Branch: ${NEW_BRANCH}"
           git fetch -a
-          EXIST_BRANCH=$(git branch -r)
-          echo "EXIST_BRANCH1: ${EXIST_BRANCH}"
-          EXIST_BRANCH=$(git branch -r --list "origin/${NEW_BRANCH}")
-          echo "EXIST_BRANCH: ${EXIST_BRANCH}"
-          if [ -n "$EXIST_BRANCH" ]; then
-            echo "$NEW_BRANCH branch already exists"
-            exit 0
-          fi
-          git switch -C $NEW_BRANCH origin/main
-          git push origin $NEW_BRANCH
+      
+      - name: Create the new branch
+        env:
+          BRANCH_NAME: "${{ inputs.branch_type }}/${{ inputs.version }}"
+          BRANCH_BASE: "origin/main"
+        shell: bash
+        run: |
+          echo "Create the new branch '${BRANCH_NAME}' from '${BRANCH_BASE}'"
 
-          git branch -r | while read -r branch; do
-            echo "Branch: ${branch}"
+          EXISTS_BRANCH=$(git branch -r --list "origin/${BRANCH_NAME}")
+          if [ -n "$EXISTS_BRANCH" ]; then
+            echo "$BRANCH_NAME branch already exists"
+            exit 1
+          fi
+
+          git switch -C $BRANCH_NAME $BRANCH_BASE
+          git push origin $BRANCH_NAME
+          echo "$BRANCH_NAME branch has been created."
+
+      - name: Create the new tag
+        env:
+          BRANCH_TYPE: ${{ inputs.branch_type }}
+          VERSION_BASE: "${{ inputs.version }}-rc"
+        shell: bash
+        run: |
+          tag_pattern="^${VERSION_BASE}\.[0-9]+$"
+          existing_tags=$(git tag | grep -E "$tag_pattern")
+
+          echo "find Max RC number..."
+          max_rc_number=0
+          for tag in $existing_tags; do
+            rc_number=$(echo $tag | sed -E "s/${VERSION_BASE}\.([0-9]+)/\1/")
+            if [[ $rc_number -gt $max_rc_number ]]; then
+              max_rc_number=$rc_number
+            fi
           done
+          echo "Max RC version: ${VERSION_BASE}.${max_rc_number}"
+
+          next_rc_number=$((max_rc_number + 1))
+          next_tag="${VERSION_BASE}.${next_rc_number}"
+          echo "Next RC version: ${next_tag}"
+
+          git tag $next_tag
+          git push origin $next_tag
+
+      # - name: Create release branch and tag
+      #   env:
+      #     BRANCH_TYPE: ${{ inputs.branch_type }}
+      #     VERSION: ${{ inputs.version }}
+      #     NEW_BRANCH: "${{ inputs.branch_type }}/${{ inputs.version }}"
+      #     VERSION_TAG: "${{ inputs.version }}-rc.1"
+      #   shell: bash
+      #   run: |
+      #     echo "New Branch: ${NEW_BRANCH}"
+      #     git fetch -a
+      #     EXIST_BRANCH=$(git branch -r --list "origin/${NEW_BRANCH}")
+      #     echo "EXIST_BRANCH: ${EXIST_BRANCH}"
+      #     if [ -n "$EXIST_BRANCH" ]; then
+      #       echo "$NEW_BRANCH branch already exists"
+      #       exit 0
+      #     fi
+      #     git switch -C $NEW_BRANCH origin/main
+      #     git push origin $NEW_BRANCH
+
+      #     git branch -r | while read -r branch; do
+      #       echo "Branch: ${branch}"
+      #     done
