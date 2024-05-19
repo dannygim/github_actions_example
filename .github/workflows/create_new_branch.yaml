@@ -31,14 +31,14 @@ jobs:
           VERSION: "${{ inputs.version }}"
         shell: bash
         run: |
-          pattern='^v[0-9]+\.[0-9]+\.[0-9]+$'
+          pattern="^v[0-9]+\\.[0-9]+\\.[0-9]+\$"
           echo "Pattern: ${pattern}"
           echo "==== 1 ======"
           git tag | grep -E "v[0-9]+\.[0-9]+\.[0-9]+"
           echo "==== 2 ======"
           git tag --list | grep -E "^v[0-9]+\\.[0-9]+\\.[0-9]+"
           echo "==== 3 ======"
-          git tag --list | grep -E "^v[0-9]+\\.[0-9]+\\.[0-9]+$"
+          git tag --list | grep -E "$pattern"
           echo "==== 4 ======"
           existing_tags=$(git tag --list | grep -E "^v[0-9]+\\.[0-9]+\\.[0-9]+$")
           echo "Existing: ${existing_tags}"
