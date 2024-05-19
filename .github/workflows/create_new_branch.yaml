@@ -11,7 +11,7 @@ on:
           - release
           - hotfix
       version:
-        description: 'Version'
+        description: 'Version(e.g. v0.1.0)'
         required: true
         type: string
 
@@ -31,23 +31,10 @@ jobs:
           VERSION: "${{ inputs.version }}"
         shell: bash
         run: |
-          pattern="^v[0-9]+\\.[0-9]+\\.[0-9]+\$"
-          echo "Pattern: ${pattern}"
-          echo "==== 1 ======"
-          git tag | grep -E "v[0-9]+\.[0-9]+\.[0-9]+"
-          echo "==== 2 ======"
-          git tag --list | grep -E "^v[0-9]+\\.[0-9]+\\.[0-9]+"
-          echo "==== 3 ======"
-          git tag --list | grep -E "$pattern"
-          echo "==== 4 ======"
-          existing_tags=$(git tag --list | grep -E "^v[0-9]+\\.[0-9]+\\.[0-9]+$")
-          echo "Existing: ${existing_tags}"
-          if [ -n "$existing_tags" ]; then
-            echo "NG"
+          if [[ !("$VERSION" =~ "^v[0-9]+\.[0-9]+\.[0-9]+$" ) ]]; then
+            echo "Invalid Version"
             exit 1
           fi
-          echo "NNNNNNN"
-          exit 1
       
       - name: Create the new branch
         env:
