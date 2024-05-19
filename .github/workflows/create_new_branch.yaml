@@ -23,11 +23,8 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-      
-      - name: Fetch all
-        shell: bash
-        run: |
-          git fetch -a
+        with:
+          fetch-depth: 0
       
       - name: Create the new branch
         env:
